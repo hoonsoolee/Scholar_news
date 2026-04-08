@@ -1,0 +1,38 @@
+name: Scholar News 자동 수집
+
+on:
+  schedule:
+    - cron: '0 22 * * *'   # 매일 오전 7시 KST (= UTC 22:00)
+    - cron: '0 10 * * *'   # 매일 오후 7시 KST (= UTC 10:00)
+  workflow_dispatch:        # 수동 실행 버튼도 활성화
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 코드 체크아웃
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Python 설치
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 패키지 설치
+        run: pip install requests
+
+      - name: 논문 수집 & HTML 생성
+        run: python scholar_news.py
+
+      - name: GitHub에 결과 push
+        run: |
+          git config user.name "Scholar News Bot"
+          git config user.email "hoonsoolee83@gmail.com"
+          git add docs/
+          git diff --cached --quiet || git commit -m "newsletter: $(TZ='Asia/Seoul' date '+%Y-%m-%d %H:%M KST')"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

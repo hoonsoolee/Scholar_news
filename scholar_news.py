@@ -20,11 +20,13 @@ from config import KEYWORDS, PAPERS_PER_KEYWORD, ARXIV_DAYS, DOCS_DIR, SITE_TITL
 # ─────────────────────────────────────────────
 
 def fetch_arxiv(keyword: str, max_results: int = PAPERS_PER_KEYWORD) -> list[dict]:
-    """arXiv API에서 최신 논문 가져오기"""
-    query = urllib.parse.quote(keyword)
+    """arXiv API에서 최신 논문 가져오기 (관련 카테고리만)"""
+    # 농업/원격탐사/이미지처리/생물 관련 카테고리만 검색
+    CAT_FILTER = "(cat:cs.CV OR cat:eess.IV OR cat:eess.SP OR cat:q-bio.QM OR cat:cs.LG)"
+    query = urllib.parse.quote(f"{CAT_FILTER} AND all:{keyword}")
     url = (
         f"http://export.arxiv.org/api/query"
-        f"?search_query=all:{query}"
+        f"?search_query={query}"
         f"&max_results={max_results}"
         f"&sortBy=submittedDate&sortOrder=descending"
     )
@@ -306,9 +308,15 @@ def git_push(date_str: str):
 # ─────────────────────────────────────────────
 
 def main():
-    date_str = datetime.now().strftime("%Y-%m-%d")
+    # GitHub Actions에서 실행 시 UTC 기준 → KST 변환
+    is_ci = os.environ.get("CI") == "true"
+    if is_ci:
+        date_str = (datetime.now(timezone.utc) + timedelta(hours=9)).strftime("%Y-%m-%d")
+    else:
+        date_str = datetime.now().strftime("%Y-%m-%d")
+
     print(f"\n{'='*50}")
-    print(f" Scholar News 실행 — {date_str}")
+    print(f" Scholar News 실행 — {date_str} {'(GitHub Actions)' if is_ci else '(로컬)'}")
     print(f"{'='*50}")
 
     # docs 폴더 생성
@@ -327,9 +335,10 @@ def main():
     # 인덱스 업데이트
     update_index_html(DOCS_DIR)
 
-    # GitHub push
-    print("\n[GitHub push 중...]")
-    git_push(date_str)
+    # 로컬 실행 시에만 git push (GitHub Actions는 워크플로우가 처리)
+    if not is_ci:
+        print("\n[GitHub push 중...]")
+        git_push(date_str)
 
     print(f"\n완료! 사이트: https://hoonsoolee.github.io/Scholar_news/")
 
