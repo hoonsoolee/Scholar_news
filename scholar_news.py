@@ -213,19 +213,30 @@ def generate_daily_html(results: dict[str, list[dict]], date_str: str) -> str:
         </div>"""
 
     return f"""<!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{SITE_TITLE} — {date_str}</title>
-  <style>{CSS}</style>
+  <style>{CSS}
+#google_translate_element {{ margin-top: 12px; }}
+.goog-te-gadget {{ color: rgba(255,255,255,0.7) !important; font-size: 0.75rem !important; }}
+.goog-te-gadget select {{ background: rgba(255,255,255,0.15); color: white; border: 1px solid rgba(255,255,255,0.4); border-radius: 6px; padding: 4px 8px; font-size: 0.82rem; cursor: pointer; }}
+</style>
 </head>
 <body>
   <header>
     <h1>📰 {SITE_TITLE}</h1>
     <p>{SITE_SUBTITLE}</p>
     <div class="date-badge">{date_str} · 총 {total}건</div>
+    <div id="google_translate_element"></div>
   </header>
+  <script>
+  function googleTranslateElementInit() {{
+    new google.translate.TranslateElement({{pageLanguage: 'en', includedLanguages: 'ko', autoDisplay: false}}, 'google_translate_element');
+  }}
+  </script>
+  <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
   <div class="container">
     <p style="text-align:right; margin-bottom:16px;">
       <a class="nav-link" href="index.html">← 전체 목록</a>
@@ -249,7 +260,7 @@ def update_index_html(docs_dir: str):
         items += f'<li><a href="{fname}">📄 {date_label}</a></li>\n'
 
     html = f"""<!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -265,13 +276,23 @@ def update_index_html(docs_dir: str):
     li a {{ display: block; background: white; padding: 14px 20px; border-radius: 10px; text-decoration: none; color: #1a3a5c; font-weight: 600; box-shadow: 0 1px 4px rgba(0,0,0,0.08); border: 1px solid #e8edf2; }}
     li a:hover {{ background: #e8f4fd; }}
     footer {{ text-align: center; color: #aaa; font-size: 0.78rem; padding: 32px; }}
+    #google_translate_element {{ margin-top: 12px; }}
+    .goog-te-gadget {{ color: rgba(255,255,255,0.7) !important; font-size: 0.75rem !important; }}
+    .goog-te-gadget select {{ background: rgba(255,255,255,0.15); color: white; border: 1px solid rgba(255,255,255,0.4); border-radius: 6px; padding: 4px 8px; font-size: 0.82rem; cursor: pointer; }}
   </style>
 </head>
 <body>
   <header>
     <h1>📰 {SITE_TITLE}</h1>
     <p>{SITE_SUBTITLE}</p>
+    <div id="google_translate_element"></div>
   </header>
+  <script>
+  function googleTranslateElementInit() {{
+    new google.translate.TranslateElement({{pageLanguage: 'en', includedLanguages: 'ko', autoDisplay: false}}, 'google_translate_element');
+  }}
+  </script>
+  <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
   <div class="container">
     <h2 style="margin-bottom:20px; color:#1a3a5c;">뉴스레터 목록</h2>
     <ul>{items}</ul>

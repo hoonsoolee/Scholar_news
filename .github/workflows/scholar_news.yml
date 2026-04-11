@@ -3,7 +3,6 @@ name: Scholar News 자동 수집
 on:
   schedule:
     - cron: '0 22 * * *'   # 매일 오전 7시 KST (= UTC 22:00)
-    - cron: '0 10 * * *'   # 매일 오후 7시 KST (= UTC 10:00)
   workflow_dispatch:        # 수동 실행 버튼도 활성화
 
 jobs:
@@ -31,8 +30,7 @@ jobs:
         run: |
           git config user.name "Scholar News Bot"
           git config user.email "hoonsoolee83@gmail.com"
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
           git add docs/
           git diff --cached --quiet || git commit -m "newsletter: $(TZ='Asia/Seoul' date '+%Y-%m-%d %H:%M KST')"
           git push
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
