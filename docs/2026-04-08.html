@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -27,6 +27,9 @@ header p { margin-top: 8px; font-size: 0.95rem; opacity: 0.85; }
 footer { text-align: center; color: #aaa; font-size: 0.78rem; padding: 24px; }
 .nav-link { display: inline-block; margin: 0 8px; color: #2e6da4; text-decoration: none; font-size: 0.85rem; }
 .nav-link:hover { text-decoration: underline; }
+#google_translate_element { margin-top: 12px; }
+.goog-te-gadget { color: rgba(255,255,255,0.7) !important; font-size: 0.75rem !important; }
+.goog-te-gadget select { background: rgba(255,255,255,0.15); color: white; border: 1px solid rgba(255,255,255,0.4); border-radius: 6px; padding: 4px 8px; font-size: 0.82rem; cursor: pointer; }
 </style>
 </head>
 <body>
@@ -34,7 +37,14 @@ footer { text-align: center; color: #aaa; font-size: 0.78rem; padding: 24px; }
     <h1>📰 Hoonsoo Lee | Scholar Daily</h1>
     <p>Hyperspectral · LiDAR · Digital Twin · Deep Learning · Carbon MRV</p>
     <div class="date-badge">2026-04-08 · 총 29건</div>
+    <div id="google_translate_element"></div>
   </header>
+  <script>
+  function googleTranslateElementInit() {
+    new google.translate.TranslateElement({pageLanguage: 'en', includedLanguages: 'ko', autoDisplay: false}, 'google_translate_element');
+  }
+  </script>
+  <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
   <div class="container">
     <p style="text-align:right; margin-bottom:16px;">
       <a class="nav-link" href="index.html">← 전체 목록</a>
